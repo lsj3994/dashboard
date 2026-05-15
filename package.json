@@ -1,0 +1,9 @@
+{
+  "name": "premium-finance-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Premium Finance Analytics Dashboard with ApexCharts & Glassmorphism",
+  "scripts": {
+    "dev": "npx serve ."
+  }
+}
