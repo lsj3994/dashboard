@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드 POST 전송 테스트</title>
+    <!-- 폰트 적용 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background: #12121b; /* 다크 모드 배경 */
+            color: #ffffff;
+            margin: 0;
+        }
+        .card { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 3rem; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+        }
+        h2 { margin-top: 0; color: #2979ff; font-weight: 600; }
+        p { color: #9e9ea7; line-height: 1.6; margin-bottom: 2rem; }
+        button { 
+            background: #2979ff; 
+            color: white; 
+            border: none; 
+            padding: 14px 28px; 
+            font-size: 1.1rem; 
+            font-weight: 600;
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            width: 100%;
+        }
+        button:hover { 
+            background: #00e5ff; 
+            color: #12121b;
+            box-shadow: 0 4px 12px rgba(0, 229, 255, 0.4);
+            transform: translateY(-2px);
+        }
+        .data-preview {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #5f6368;
+            margin-bottom: 20px;
+            word-break: break-all;
+        }
+        .data-preview strong { color: #9e9ea7; }
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            text-align: left;
+            background: rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .form-group label { font-size: 0.95rem; font-weight: 600; color: #ffffff; }
+        .form-group select {
+            background: #12121b;
+            color: #ffffff;
+            border: 1px solid #2979ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>🚀 POST 전송 테스트</h2>
+        <p>요청하신 데이터를 기준으로 <code>dashboard.jsp</code>에 <strong>POST 방식</strong>으로 데이터를 전송하여 화면을 띄웁니다.</p>
+        
+        <div class="data-preview">
+            <strong>전송 데이터 미리보기:</strong><br><br>
+            • MetaData: [52000, 85000, 64000...]<br>
+            • CharDate: ["1일차", "2일차", "3일차"...]<br>
+            • StandData: 85000<br>
+            • StandPoint: "3일차"
+        </div>
+
+        <!-- 
+            GET 방식의 영문 파라미터(chartData, categories 등)는 
+            JSP에서 MetaData, CharDate, StandData, StandPoint로 받도록 매핑되어 있습니다. 
+        -->
+        <form action="dashboard.jsp" method="POST">
+            <!-- chartData에 해당 -->
+            <input type="hidden" name="MetaData" value="[52000,85000,64000,110000,75000,95000,142000,68000,125000,138000]">
+            <!-- categories에 해당 -->
+            <input type="hidden" name="CharDate" value='["1일차","2일차","3일차","4일차","5일차","6일차","7일차","8일차","9일차","10일차"]'>
+            <!-- targetValue에 해당 -->
+            <input type="hidden" name="StandData" value="85000">
+            <!-- targetX에 해당 -->
+            <input type="hidden" name="StandPoint" value='"3일차"'>
+            
+            <div class="form-group">
+                <label>📝 대시보드 제목:</label>
+                <input type="text" name="ChartTitle" value="일자별 진료비 변동 그래프" style="background: #12121b; color: #ffffff; border: 1px solid #2979ff; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; outline: none; width: 60%;">
+            </div>
+
+            <div class="form-group">
+                <label>🎨 테마 (Theme):</label>
+                <select name="Theme">
+                    <option value="sapphire">Royal Sapphire (기본)</option>
+                    <option value="cyan">Neon Cyan</option>
+                    <option value="magenta">Cyberpunk Magenta</option>
+                    <option value="emerald">Emerald Forest</option>
+                    <option value="sunset">Sunset Glow</option>
+                    <option value="white">Pure White</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>🌓 모드 (Mode):</label>
+                <select name="Mode">
+                    <option value="light">Light 모드 (기본)</option>
+                    <option value="dark">Dark 모드</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>📊 차트 유형 (Type):</label>
+                <select name="Type">
+                    <option value="area">Area 차트 (기본)</option>
+                    <option value="line">Line 차트</option>
+                    <option value="bar">Bar 차트</option>
+                </select>
+            </div>
+            
+            <button type="submit">대시보드 접속하기 (POST)</button>
+        </form>
+    </div>
+
+</body>
+</html>

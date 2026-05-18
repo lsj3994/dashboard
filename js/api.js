@@ -10,8 +10,40 @@ class FinanceAPI {
      */
     static async getDailyAssetData() {
         // [JSP 실전 연동 및 URL 파라미터 JSON 동적 파싱 지원]
-        // 주소창으로 전달된 매개변수를 완벽하게 감지하여 동적 차트 렌더링용 객체로 즉시 변환합니다.
+        // 주소창으로 전달된 매개변수나 서버사이드(POST)에서 주입된 변수를 모두 처리합니다.
         try {
+            // 1. 서버(JSP)에서 주입된 POST 방식의 페이로드가 있는지 먼저 확인
+            if (window.__SERVER_PAYLOAD__ && 
+                window.__SERVER_PAYLOAD__.MetaData && 
+                window.__SERVER_PAYLOAD__.MetaData.trim() !== "" &&
+                !window.__SERVER_PAYLOAD__.MetaData.includes("<%=")) { // JSP 코드가 그대로 노출되는 로컬 환경 제외
+                
+                const pMeta = window.__SERVER_PAYLOAD__.MetaData;
+                const pDate = window.__SERVER_PAYLOAD__.CharDate;
+                const pStand = window.__SERVER_PAYLOAD__.StandData;
+                const pPoint = window.__SERVER_PAYLOAD__.StandPoint;
+
+                if (pMeta && pDate) {
+                    const parsedAmounts = JSON.parse(pMeta);
+                    const parsedDates = JSON.parse(pDate);
+                    const parsedTarget = pStand ? JSON.parse(pStand) : 0;
+                    
+                    let parsedTargetX = null;
+                    if (pPoint) {
+                        try { parsedTargetX = JSON.parse(pPoint); } 
+                        catch(e) { parsedTargetX = pPoint; }
+                    }
+
+                    const combinedChartData = parsedDates.map((dateStr, idx) => ({
+                        date: dateStr,
+                        amount: parsedAmounts[idx] || 0
+                    }));
+
+                    return { targetValue: parsedTarget, targetX: parsedTargetX, chartData: combinedChartData };
+                }
+            }
+
+            // 2. 서버 주입 변수가 없다면 기존처럼 URL 파라미터(GET)에서 찾기
             const href = window.location.href;
             let paramString = "";
             
@@ -60,7 +92,7 @@ class FinanceAPI {
                 }
             }
         } catch (e) {
-            console.warn("URL 파라미터 파싱 실패, mock 데이터로 대체합니다.", e);
+            console.warn("데이터 파싱 실패, mock 데이터로 대체합니다.", e);
         }
 
         // 내장 모의 데이터 (file:// 프로토콜 실행 시 fetch CORS 에러 대응)
