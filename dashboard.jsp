@@ -1,3 +1,40 @@
+<!--
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%!
+    // 파라미터(POST/GET)와 어트리뷰트(서버 내부 Forward) 모두 탐색하는 헬퍼 함수
+    private String getReqData(HttpServletRequest req, String key) {
+        String val = req.getParameter(key);
+        if (val == null || val.trim().isEmpty()) {
+            Object attr = req.getAttribute(key);
+            if (attr != null) val = String.valueOf(attr);
+        }
+        // 혹시 모를 대소문자 차이 (예: metaData vs MetaData) 방어
+        if (val == null || val.trim().isEmpty()) {
+            String altKey = key.substring(0, 1).toLowerCase() + key.substring(1);
+            val = req.getParameter(altKey);
+            if (val == null || val.trim().isEmpty()) {
+                Object attr = req.getAttribute(altKey);
+                if (attr != null) val = String.valueOf(attr);
+            }
+        }
+        // 자바스크립트 백틱 문법 충돌 방지
+        return val != null ? val.replace("`", "\\`") : "";
+    }
+%>
+<%
+    // 수신 인코딩을 UTF-8로 강제하여 한글 및 JSON 파싱 깨짐 방지
+    request.setCharacterEncoding("UTF-8");
+
+    String reqMetaData = getReqData(request, "MetaData");
+    String reqCharDate = getReqData(request, "CharDate");
+    String reqStandData = getReqData(request, "StandData");
+    String reqStandPoint = getReqData(request, "StandPoint");
+    String reqTheme = getReqData(request, "Theme");
+    String reqMode = getReqData(request, "Mode");
+    String reqType = getReqData(request, "Type");
+    String reqChartTitle = getReqData(request, "ChartTitle");
+%>
+-->
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -30,14 +67,17 @@
     -->
 
     <!-- Google Fonts: Outfit (헤딩/강조) & Inter (본문/데이터) -->
+    <!-- 폐쇄망(오프라인) 환경에서는 아래 폰트 로딩으로 인해 지연이 발생할 수 있어 주석 처리합니다. -->
+    <!--
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+    -->
 
-    <!-- ApexCharts CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- ApexCharts Library (Local) -->
+    <script src="js/apexcharts.min.js"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css?v=5">
@@ -307,7 +347,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             // 동적 타이틀 적용
             const payloadTitle = window.__SERVER_PAYLOAD__ && window.__SERVER_PAYLOAD__.ChartTitle;
-            if (payloadTitle && payloadTitle.trim() !== "" && !payloadTitle.includes("<%=")) {
+            if (payloadTitle && payloadTitle.trim() !== "" && !payloadTitle.includes("<" + "%=")) {
                 document.getElementById('dashboardTitle').innerText = payloadTitle;
             }
 
@@ -358,9 +398,9 @@
             let currentType = window.__SERVER_PAYLOAD__?.Type?.trim() || 'area';
             let currentMode = window.__SERVER_PAYLOAD__?.Mode?.trim() || 'light';
 
-            if (currentTheme === '' || currentTheme.includes('<%=')) currentTheme = 'sapphire';
-            if (currentType === '' || currentType.includes('<%=')) currentType = 'area';
-            if (currentMode === '' || currentMode.includes('<%=')) currentMode = 'light';
+            if (currentTheme === '' || currentTheme.includes('<' + '%=')) currentTheme = 'sapphire';
+            if (currentType === '' || currentType.includes('<' + '%=')) currentType = 'area';
+            if (currentMode === '' || currentMode.includes('<' + '%=')) currentMode = 'light';
 
             /* 설정 반영 */
             document.body.setAttribute('data-color-mode', currentMode);

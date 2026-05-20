@@ -24,14 +24,20 @@ class FinanceAPI {
                 const pPoint = window.__SERVER_PAYLOAD__.StandPoint;
 
                 if (pMeta && pDate) {
-                    const parsedAmounts = JSON.parse(pMeta);
-                    const parsedDates = JSON.parse(pDate);
-                    const parsedTarget = pStand ? JSON.parse(pStand) : 0;
+                    // 내부망 WAS의 XSS 보안 필터(Lucy XSS 등)가 큰따옴표(")를 &quot;로 치환했을 경우를 대비해 원래대로 복원
+                    const unescapeHTML = (str) => {
+                        if (!str) return str;
+                        return str.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+                    };
+
+                    const parsedAmounts = JSON.parse(unescapeHTML(pMeta));
+                    const parsedDates = JSON.parse(unescapeHTML(pDate));
+                    const parsedTarget = pStand ? JSON.parse(unescapeHTML(pStand)) : 0;
                     
                     let parsedTargetX = null;
                     if (pPoint) {
-                        try { parsedTargetX = JSON.parse(pPoint); } 
-                        catch(e) { parsedTargetX = pPoint; }
+                        try { parsedTargetX = JSON.parse(unescapeHTML(pPoint)); } 
+                        catch(e) { parsedTargetX = unescapeHTML(pPoint); }
                     }
 
                     const combinedChartData = parsedDates.map((dateStr, idx) => ({
