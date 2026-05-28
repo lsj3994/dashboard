@@ -37,6 +37,9 @@ const server = http.createServer((req, res) => {
                                .replace('<%= reqType %>', postData.Type || '')
                                .replace('<%= reqChartTitle %>', postData.ChartTitle || '');
                 
+                // 브라우저에서 JSP 자바 코드 블록이 텍스트로 노출되지 않도록 서버사이드에서 제거
+                html = html.replace(/<%[\s\S]*?%>/g, '');
+                
                 res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
                 res.end(html);
             });

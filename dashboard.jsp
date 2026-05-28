@@ -1,4 +1,3 @@
-<!--
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%!
     // 파라미터(POST/GET)와 어트리뷰트(서버 내부 Forward) 모두 탐색하는 헬퍼 함수
@@ -34,7 +33,6 @@
     String reqType = getReqData(request, "Type");
     String reqChartTitle = getReqData(request, "ChartTitle");
 %>
--->
 <!DOCTYPE html>
 <html lang="ko">
 
