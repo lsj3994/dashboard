@@ -47,6 +47,44 @@ const server = http.createServer((req, res) => {
         return;
     }
 
+    // POST 방식으로 subot.jsp를 요청받았을 때 (JSP 서버 기능 시뮬레이션)
+    if (req.method === 'POST' && urlPath.includes('subot.jsp')) {
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            const postData = querystring.parse(body);
+            
+            fs.readFile(path.join(__dirname, 'subot.jsp'), 'utf8', (err, data) => {
+                if (err) {
+                    res.writeHead(500);
+                    res.end('Error reading subot.jsp');
+                    return;
+                }
+                
+                let html = data.replace('<%= reqMetaData %>', postData.MetaData || '')
+                               .replace('<%= reqCharDate %>', postData.CharDate || '')
+                               .replace('<%= reqStandData %>', postData.StandData || '')
+                               .replace('<%= reqCompareData %>', postData.CompareData || '')
+                               .replace('<%= reqCompareName %>', postData.CompareName || '')
+                               .replace('<%= reqTheme %>', postData.Theme || '')
+                               .replace('<%= reqMode %>', postData.Mode || '')
+                               .replace('<%= reqType %>', postData.Type || '')
+                               .replace('<%= reqChartTitle %>', postData.ChartTitle || '')
+                               .replace('<%= reqHospDays %>', postData.HospDays || '')
+                               .replace('<%= reqDailyCost %>', postData.DailyCost || '')
+                               .replace('<%= reqDeficitDay %>', postData.DeficitDay || '');
+                
+                html = html.replace(/<%[\s\S]*?%>/g, '');
+                
+                res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                res.end(html);
+            });
+        });
+        return;
+    }
+
     // 정적 파일 라우팅 (html, css, js 등)
     let filePath = path.join(__dirname, urlPath === '/' ? 'post_test.html' : urlPath);
     const extname = path.extname(filePath);

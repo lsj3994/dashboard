@@ -528,7 +528,7 @@
                 grid: { borderColor: isLightInit ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)', strokeDashArray: 5, padding: { bottom: 20 } },
                 xaxis: { categories: categories, labels: { style: { colors: isLightInit ? '#5f6368' : '#9e9ea7' } } },
                 yaxis: { labels: { style: { colors: isLightInit ? '#5f6368' : '#9e9ea7' } } },
-                tooltip: { theme: currentMode },
+                tooltip: { theme: currentMode, shared: true, intersect: false },
                 dataLabels: getDataLabelsConfig(initTheme),
                 annotations: getAnnotationsConfig(initTheme),
                 fill: getFillConfig(initTheme, currentType)
@@ -553,7 +553,7 @@
                     grid: { borderColor: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)', strokeDashArray: 5, padding: { bottom: 20 } },
                     xaxis: { categories: categories, labels: { style: { colors: isLight ? '#5f6368' : '#9e9ea7' } } },
                     yaxis: { labels: { style: { colors: isLight ? '#5f6368' : '#9e9ea7' } } },
-                    tooltip: { theme: mode },
+                    tooltip: { theme: mode, shared: true, intersect: false },
                     dataLabels: getDataLabelsConfig(themeCfg),
                     annotations: getAnnotationsConfig(themeCfg),
                     fill: getFillConfig(themeCfg, currentType)

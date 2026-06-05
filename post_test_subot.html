@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Post Loader</title>
+</head>
+<body onload="document.forms[0].submit();" style="background-color:#12121b;">
+  <!-- 로컬 서버에서 테스트하시려면 action을 "http://localhost:3000/subot.jsp" 로 변경해서 사용하세요 -->
+  <form action="https://smartmocs.hallym.or.kr/test/dashboard/subot.jsp" method="POST">    
+    <!-- JSON 배열 데이터가 포함된 속성은 쌍따옴표 충돌을 막기 위해 홑따옴표(')로 감쌌습니다. -->
+    <input type="hidden" name="MetaData" value='[431967,970584,1224281,1455202,2096780,2438329,2938245,3343697,3571827,3772729,4325323,4536120,4814013,5194488]'>     
+    <input type="hidden" name="CompareData" value='[]'>    
+    <input type="hidden" name="CharDate" value='["1일차","2일차","3일차","4일차","5일차","6일차","7일차","8일차","9일차","10일차","11일차","12일차","13일차","14일차"]'>    
+    <input type="hidden" name="StandData" value="4943300">    
+    <input type="hidden" name="CompareName" value="평균실적">    
+    <input type="hidden" name="HospDays" value="">    
+    <input type="hidden" name="DailyCost" value="201520">    
+    <input type="hidden" name="DeficitDay" value="">    
+    <input type="hidden" name="Theme" value="sunset">    
+    <input type="hidden" name="Mode" value="light">    
+    <input type="hidden" name="Type" value="line">    
+    <input type="hidden" name="ChartTitle" value="G65003">
+  </form>
+</body>
+</html>

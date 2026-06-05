@@ -27,12 +27,12 @@ class FinanceAPI {
                     // 내부망 WAS의 XSS 보안 필터(Lucy XSS 등)가 큰따옴표(")를 &quot;로 치환했을 경우를 대비해 원래대로 복원
                     const unescapeHTML = (str) => {
                         if (!str) return str;
-                        return str.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+                        return str.replace(/&quot;/g, '"').replace(/&#34;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
                     };
 
                     const parsedAmounts = JSON.parse(unescapeHTML(pMeta));
                     const parsedDates = JSON.parse(unescapeHTML(pDate));
-                    const parsedTarget = pStand ? JSON.parse(unescapeHTML(pStand)) : 0;
+                    const parsedTarget = pStand ? parseFloat(unescapeHTML(pStand).replace(/,/g, '')) || 0 : 0;
                     
                     let parsedTargetX = null;
                     if (pPoint) {
@@ -72,7 +72,7 @@ class FinanceAPI {
                 if (paramChartData && paramChartDates) {
                     const parsedAmounts = JSON.parse(paramChartData);
                     const parsedDates = JSON.parse(paramChartDates);
-                    const parsedTarget = paramTargetValue ? JSON.parse(paramTargetValue) : 0;
+                    const parsedTarget = paramTargetValue ? parseFloat(paramTargetValue.replace(/,/g, '')) || 0 : 0;
                     
                     // 기준점(targetX) 파싱 - JSON 문자열 또는 일반 텍스트 모두 지원
                     let parsedTargetX = null;
